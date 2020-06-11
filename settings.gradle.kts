@@ -28,9 +28,9 @@ if (!pluginPublish) {
         include(":widgets-permissions")
         include(":widgets-media")
 
-        if (!additionsPublish) {
-            include(":sample:android-app")
-            include(":sample:mpp-library")
-        }
+        // if (!additionsPublish) {
+        //     include(":sample:android-app")
+        //     include(":sample:mpp-library")
+        // }
     }
 }
