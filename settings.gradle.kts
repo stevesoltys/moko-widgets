@@ -17,12 +17,12 @@ include(":gradle-plugin")
 
 if (!pluginPublish) {
     include(":widgets")
+    include(":widgets-collection")
 
     if(!corePublish) {
         include(":widgets-flat")
         include(":widgets-sms")
         include(":widgets-bottomsheet")
-        include(":widgets-collection")
         include(":widgets-datetime-picker")
         include(":widgets-image-network")
         include(":widgets-permissions")

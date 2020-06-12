@@ -5,10 +5,11 @@ package dev.icerock.moko.widgets.core.style
 
 import dev.icerock.moko.graphics.toUIColor
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
+import dev.icerock.moko.widgets.core.objc.setAssociatedObject
 import dev.icerock.moko.widgets.core.screen.navigation.NavigationBar
 import dev.icerock.moko.widgets.core.utils.toUIBarButtonItem
 import dev.icerock.moko.widgets.core.utils.toUIFont
-import dev.icerock.moko.widgets.core.objc.setAssociatedObject
+import platform.Foundation.valueForKey
 import platform.UIKit.NSFontAttributeName
 import platform.UIKit.NSForegroundColorAttributeName
 import platform.UIKit.UIApplication
@@ -17,10 +18,14 @@ import platform.UIKit.UIBarMetricsDefault
 import platform.UIKit.UIImage
 import platform.UIKit.UINavigationBar
 import platform.UIKit.UINavigationController
+import platform.UIKit.UISearchBarStyle
 import platform.UIKit.UISearchController
 import platform.UIKit.UISearchResultsUpdatingProtocol
+import platform.UIKit.UITextField
 import platform.UIKit.UIViewController
+import platform.UIKit.backgroundColor
 import platform.UIKit.navigationItem
+import platform.UIKit.searchTextField
 import platform.UIKit.tintColor
 import platform.darwin.NSObject
 
@@ -106,7 +111,35 @@ fun NavigationBar.Search.apply(
         }
         obscuresBackgroundDuringPresentation = false
         searchBar.placeholder = searchPlaceholder?.localized()
+
         styles?.tintColor?.also { searchBar.tintColor = it.toUIColor() }
+
+        searchBar.searchBarStyle = when (iosSearchBarStyle) {
+            NavigationBar.IOSSearchBarStyle.DEFAULT -> UISearchBarStyle.UISearchBarStyleDefault
+            NavigationBar.IOSSearchBarStyle.PROMINENT -> UISearchBarStyle.UISearchBarStyleProminent
+            NavigationBar.IOSSearchBarStyle.MINIMAL -> UISearchBarStyle.UISearchBarStyleMinimal
+        }
+
+        textFieldStyles?.also { style ->
+            val textField = searchBar.valueForKey("searchField") as? UITextField
+
+            style.textStyle?.also { ts ->
+                val attributes = mutableMapOf<Any?, Any?>()
+
+                ts.color?.also { searchBar.searchTextField.textColor = ts.color.toUIColor() }
+                ts.fontStyle?.also { searchBar.searchTextField.font = ts.toUIFont() }
+
+                textField?.defaultTextAttributes = attributes
+            }
+
+            style.iconTintColor?.also {
+                searchBar.searchTextField.leftView?.tintColor = it.toUIColor()
+            }
+
+            style.backgroundColor?.also {
+                searchBar.searchTextField.backgroundColor = it.toUIColor()
+            }
+        }
     }
 
     viewController.navigationItem.searchController = searchController

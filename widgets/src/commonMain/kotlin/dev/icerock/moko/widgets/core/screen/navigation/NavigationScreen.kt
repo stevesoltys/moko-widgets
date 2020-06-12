@@ -115,9 +115,11 @@ sealed class NavigationBar {
     data class Search(
         val title: StringDesc,
         val styles: Styles? = null,
+        val textFieldStyles: TextFieldStyles? = null,
         val backButton: BarButton? = null,
         val searchPlaceholder: StringDesc? = null,
         val searchQuery: MutableLiveData<String>,
+        val iosSearchBarStyle: IOSSearchBarStyle = IOSSearchBarStyle.DEFAULT,
         val androidSearchBackground: Background<Fill.Solid>? = null
     ) : NavigationBar()
 
@@ -126,6 +128,19 @@ sealed class NavigationBar {
         val textStyle: TextStyle<Color>? = null,
         val tintColor: Color? = null,
         val isShadowEnabled: Boolean? = null
+    )
+
+    enum class IOSSearchBarStyle {
+        DEFAULT,
+        MINIMAL,
+        PROMINENT
+    }
+
+    data class TextFieldStyles(
+        val backgroundColor: Color? = null,
+        val textStyle: TextStyle<Color>? = null,
+        val tintColor: Color? = null,
+        val iconTintColor: Color? = null
     )
 
     data class BarButton(

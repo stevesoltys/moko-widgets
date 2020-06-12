@@ -1,7 +1,11 @@
 language: java
 
 cache:
-  cocoapods: true
+  directories:
+    - $HOME/.m2
+    - gradle
+    - buildSrc/build
+    - widgets/build
 
 addons:
   homebrew:
@@ -25,7 +29,9 @@ matrix:
       - export JAVA_HOME=$(/usr/libexec/java_home -v 11)
       - ./gradlew -PdevPublish -PpluginPublish publishToMavenLocal
       - ./gradlew -PdevPublish -PcorePublish :widgets:publishToMavenLocal
+      - cd sample/ios-app && pod install
       - cd $TRAVIS_BUILD_DIR
+      - ./gradlew -PdevPublish -PadditionsPublish :widgets-collection:build
 
 install: true
-script: ./gradlew -PdevPublish -PcorePublish -DBINTRAY_USER=$BINTRAY_USER -DBINTRAY_KEY=$BINTRAY_KEY -DANDROID_SDK_ROOT=/usr/local/share/android-sdk -DANDROID_HOME=/usr/local/share/android-sdk publishNoValidationToBintray
+script: ./gradlew --stacktrace -PdevPublish -PcorePublish -DBINTRAY_USER=$BINTRAY_USER -DBINTRAY_KEY=$BINTRAY_KEY -DANDROID_SDK_ROOT=/usr/local/share/android-sdk -DANDROID_HOME=/usr/local/share/android-sdk publishNoValidationToBintray
