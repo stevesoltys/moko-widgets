@@ -124,24 +124,23 @@ fun NavigationBar.Search.apply(
             val textField = searchBar.valueForKey("searchField") as? UITextField
 
             style.textStyle?.also { ts ->
-                val attributes = mutableMapOf<Any?, Any?>()
-
-                ts.color?.also { searchBar.searchTextField.textColor = ts.color.toUIColor() }
-                ts.fontStyle?.also { searchBar.searchTextField.font = ts.toUIFont() }
-
-                textField?.defaultTextAttributes = attributes
+                ts.color?.also { textField?.textColor = it.toUIColor() }
+                ts.fontStyle?.also { textField?.font = ts.toUIFont() }
             }
 
             style.iconTintColor?.also {
-                searchBar.searchTextField.leftView?.tintColor = it.toUIColor()
+                textField?.leftView?.tintColor = it.toUIColor()
             }
 
             style.backgroundColor?.also {
-                searchBar.searchTextField.backgroundColor = it.toUIColor()
+                textField?.backgroundColor = it.toUIColor()
             }
         }
+
+        setAutomaticallyShowsSearchResultsController(true)
     }
 
+    viewController.navigationItem.hidesSearchBarWhenScrolling = false
     viewController.navigationItem.searchController = searchController
     viewController.definesPresentationContext = true
 }
