@@ -143,7 +143,7 @@ fun NavigationBar.Search.apply(
         setAutomaticallyShowsSearchResultsController(true)
     }
 
-    viewController.navigationItem.hidesSearchBarWhenScrolling = false
+    viewController.navigationItem.hidesSearchBarWhenScrolling = iosHidesSearchBarWhenScrolling
     viewController.navigationItem.searchController = searchController
     viewController.definesPresentationContext = true
 }
