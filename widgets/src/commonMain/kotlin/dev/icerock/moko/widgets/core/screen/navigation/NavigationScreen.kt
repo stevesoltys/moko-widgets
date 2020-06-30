@@ -120,7 +120,8 @@ sealed class NavigationBar {
         val searchPlaceholder: StringDesc? = null,
         val searchQuery: MutableLiveData<String>,
         val iosSearchBarStyle: IOSSearchBarStyle = IOSSearchBarStyle.DEFAULT,
-        val androidSearchBackground: Background<Fill.Solid>? = null
+        val androidSearchBackground: Background<Fill.Solid>? = null,
+        val iosHidesSearchBarWhenScrolling: Boolean = true
     ) : NavigationBar()
 
     data class Styles(

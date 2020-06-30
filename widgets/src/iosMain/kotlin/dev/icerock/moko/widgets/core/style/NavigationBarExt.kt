@@ -128,6 +128,9 @@ fun NavigationBar.Search.apply(
                 ts.fontStyle?.also { textField?.font = ts.toUIFont() }
             }
 
+            viewController.navigationItem.hidesSearchBarWhenScrolling =
+                iosHidesSearchBarWhenScrolling
+
             style.iconTintColor?.also {
                 textField?.leftView?.tintColor = it.toUIColor()
             }
