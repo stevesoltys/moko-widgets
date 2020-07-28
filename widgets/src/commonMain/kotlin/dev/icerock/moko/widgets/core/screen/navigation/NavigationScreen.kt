@@ -128,7 +128,8 @@ sealed class NavigationBar {
         val backgroundColor: Color? = null,
         val textStyle: TextStyle<Color>? = null,
         val tintColor: Color? = null,
-        val isShadowEnabled: Boolean? = null
+        val isShadowEnabled: Boolean? = null,
+        val isTransparent: Boolean = false
     )
 
     enum class IOSSearchBarStyle {

@@ -46,6 +46,7 @@ fun UINavigationBar.applyNavigationBarStyle(style: NavigationBar.Styles?) {
         ?: UIApplication.sharedApplication.keyWindow?.rootViewController()?.view?.tintColor!!
     val shadowImage = if (style?.isShadowEnabled == false) UIImage() else null
     val backgroundImage = if (style?.isShadowEnabled == false) UIImage() else null
+    val transparent = style?.isTransparent ?: false
 
 //    TODO uncomment when kotlin-native will fix linking to newest api
 //    if (UIDevice.currentDevice.systemVersion.compareTo("13.0") < 0) {
@@ -53,6 +54,7 @@ fun UINavigationBar.applyNavigationBarStyle(style: NavigationBar.Styles?) {
     this.titleTextAttributes = textAttributes
     this.tintColor = tintColor
     this.shadowImage = shadowImage
+    this.translucent = transparent
     this.setBackgroundImage(backgroundImage, forBarMetrics = UIBarMetricsDefault)
 //    } else {
 //        val appearance = UINavigationBarAppearance().apply {
