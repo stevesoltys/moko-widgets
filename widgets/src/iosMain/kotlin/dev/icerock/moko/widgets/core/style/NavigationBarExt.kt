@@ -10,24 +10,7 @@ import dev.icerock.moko.widgets.core.screen.navigation.NavigationBar
 import dev.icerock.moko.widgets.core.utils.toUIBarButtonItem
 import dev.icerock.moko.widgets.core.utils.toUIFont
 import platform.Foundation.valueForKey
-import platform.UIKit.NSFontAttributeName
-import platform.UIKit.NSForegroundColorAttributeName
-import platform.UIKit.UIApplication
-import platform.UIKit.UIBarButtonItem
-import platform.UIKit.UIBarMetricsDefault
-import platform.UIKit.UIImage
-import platform.UIKit.UIImageView
-import platform.UIKit.UINavigationBar
-import platform.UIKit.UINavigationController
-import platform.UIKit.UISearchBarStyle
-import platform.UIKit.UISearchController
-import platform.UIKit.UISearchResultsUpdatingProtocol
-import platform.UIKit.UITextField
-import platform.UIKit.UIViewController
-import platform.UIKit.backgroundColor
-import platform.UIKit.navigationItem
-import platform.UIKit.searchTextField
-import platform.UIKit.tintColor
+import platform.UIKit.*
 import platform.darwin.NSObject
 
 fun UINavigationBar.applyNavigationBarStyle(style: NavigationBar.Styles?) {
@@ -86,7 +69,20 @@ fun NavigationBar.Normal.apply(
     viewController.navigationItem.title = title.localized()
 
     titleImage?.let {
-        viewController.navigationItem.titleView = UIImageView(it.toUIImage())
+        val imageView = UIImageView(it.toUIImage())
+
+        imageView.contentMode = UIViewContentMode.UIViewContentModeScaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+
+        titleImageWidthAnchor?.toDouble()?.let { widthAnchor ->
+            imageView.widthAnchor.constraintEqualToConstant(widthAnchor).active = true
+        }
+
+        titleImageHeightAnchor?.toDouble()?.let { heightAnchor ->
+            imageView.heightAnchor.constraintEqualToConstant(heightAnchor).active = true
+        }
+
+        viewController.navigationItem.titleView = imageView
     }
 
     navigationController?.navigationBar?.applyNavigationBarStyle(styles)

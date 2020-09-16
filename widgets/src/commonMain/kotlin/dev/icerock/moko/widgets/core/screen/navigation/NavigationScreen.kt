@@ -108,6 +108,8 @@ sealed class NavigationBar {
     data class Normal(
         val title: StringDesc,
         val titleImage: ImageResource? = null,
+        val titleImageWidthAnchor: Float? = null,
+        val titleImageHeightAnchor: Float? = null,
         val styles: Styles? = null,
         val backButton: BarButton? = null,
         val actions: List<BarButton>? = null
