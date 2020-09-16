@@ -4,8 +4,6 @@
 
 buildscript {
     repositories {
-        mavenLocal()
-
         jcenter()
         google()
 
@@ -16,17 +14,13 @@ buildscript {
 
         maven { url = uri("https://dl.bintray.com/icerockdev/plugins-dev") }
     }
-    if (!properties.containsKey("pluginPublish")) {
-        dependencies {
-            Deps.plugins.values.forEach { classpath(it) }
-        }
+    dependencies {
+        Deps.plugins.values.forEach { classpath(it) }
     }
 }
 
 allprojects {
     repositories {
-        mavenLocal()
-
         google()
         jcenter()
 
@@ -48,18 +42,21 @@ allprojects {
         val uniqueName = "${project.group}.${project.name}"
 
         kotlinExtension.targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java) {
-            compilations["main"].kotlinOptions.freeCompilerArgs += listOf("-module-name", uniqueName)
+            compilations["main"].kotlinOptions.freeCompilerArgs += listOf(
+                "-module-name",
+                uniqueName
+            )
         }
     }
 
-    afterEvaluate {
-        dependencies {
-            if (configurations.map { it.name }.contains("compileOnly")) {
+    configurations
+        .matching { it.name == "compileOnly" }
+        .configureEach {
+            dependencies {
                 // fix of package javax.annotation does not exist import javax.annotation.Generated in DataBinding code
                 "compileOnly"("javax.annotation:jsr250-api:1.0")
             }
         }
-    }
 
     val project = this
     val bintrayPath: Pair<String, String>?
@@ -81,19 +78,6 @@ allprojects {
                 }
             }
         }
-        this.name.endsWith("-plugin") -> {
-            bintrayPath = "maven" to "moko-widgets-generator"
-
-            this.group = "dev.icerock.moko.widgets"
-            this.version = Versions.Plugins.mokoWidgets
-
-            this.plugins.withType<JavaPlugin> {
-                this@allprojects.configure<JavaPluginExtension> {
-                    sourceCompatibility = JavaVersion.VERSION_1_6
-                    targetCompatibility = JavaVersion.VERSION_1_6
-                }
-            }
-        }
         else -> {
             bintrayPath = null
         }
@@ -104,7 +88,8 @@ allprojects {
             project.configure<PublishingExtension> {
                 val repo = bintrayPath.first
                 val artifact = bintrayPath.second
-                val mavenUrl = "https://api.bintray.com/maven/stevesoltys/$repo/$artifact/;publish=1"
+                val mavenUrl =
+                    "https://api.bintray.com/maven/stevesoltys/$repo/$artifact/;publish=1"
 
                 repositories.maven(mavenUrl) {
                     this.name = "bintray"

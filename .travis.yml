@@ -34,4 +34,4 @@ matrix:
       - ./gradlew -PdevPublish -PadditionsPublish :widgets-collection:build
 
 install: true
-script: ./gradlew --stacktrace -PdevPublish -PcorePublish -DBINTRAY_USER=$BINTRAY_USER -DBINTRAY_KEY=$BINTRAY_KEY -DANDROID_SDK_ROOT=/usr/local/share/android-sdk -DANDROID_HOME=/usr/local/share/android-sdk publishNoValidationToBintray
+script: ./gradlew --stacktrace -PdevPublish -DBINTRAY_USER=$BINTRAY_USER -DBINTRAY_KEY=$BINTRAY_KEY -DANDROID_SDK_ROOT=/usr/local/share/android-sdk -DANDROID_HOME=/usr/local/share/android-sdk publishNoValidationToBintray
