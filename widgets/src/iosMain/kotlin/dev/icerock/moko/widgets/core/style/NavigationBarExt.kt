@@ -16,6 +16,7 @@ import platform.UIKit.UIApplication
 import platform.UIKit.UIBarButtonItem
 import platform.UIKit.UIBarMetricsDefault
 import platform.UIKit.UIImage
+import platform.UIKit.UIImageView
 import platform.UIKit.UINavigationBar
 import platform.UIKit.UINavigationController
 import platform.UIKit.UISearchBarStyle
@@ -81,6 +82,11 @@ fun NavigationBar.Normal.apply(
 ) {
     navigationController?.navigationBarHidden = false
     viewController.navigationItem.title = title.localized()
+
+    titleImage?.let {
+        viewController.navigationItem.titleView = UIImageView(it.toUIImage())
+    }
+
     navigationController?.navigationBar?.applyNavigationBarStyle(styles)
 
     if (backButton != null) {
