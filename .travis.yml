@@ -27,8 +27,8 @@ matrix:
       - yes | /usr/local/share/android-sdk/tools/bin/sdkmanager --update &>/dev/null
       - yes | /usr/local/share/android-sdk/tools/bin/sdkmanager "platform-tools" "platforms;android-28" &>/dev/null
       - export JAVA_HOME=$(/usr/libexec/java_home -v 11)
-      - ./gradlew -PdevPublish -PpluginPublish publishToMavenLocal
-      - ./gradlew -PdevPublish -PcorePublish :widgets:publishToMavenLocal
+      - ./gradlew -p plugin -PdevPublish publishToMavenLocal
+      - ./gradlew -PdevPublish :widgets:publishToMavenLocal
       - cd sample/ios-app && pod install
       - cd $TRAVIS_BUILD_DIR
       - ./gradlew -PdevPublish -PadditionsPublish :widgets-collection:build
