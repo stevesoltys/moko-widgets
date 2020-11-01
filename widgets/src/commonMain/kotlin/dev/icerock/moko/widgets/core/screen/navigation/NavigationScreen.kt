@@ -107,6 +107,9 @@ sealed class NavigationBar {
 
     data class Normal(
         val title: StringDesc,
+        val titleImage: ImageResource? = null,
+        val titleImageWidthAnchor: Float? = null,
+        val titleImageHeightAnchor: Float? = null,
         val styles: Styles? = null,
         val backButton: BarButton? = null,
         val actions: List<BarButton>? = null
@@ -115,9 +118,11 @@ sealed class NavigationBar {
     data class Search(
         val title: StringDesc,
         val styles: Styles? = null,
+        val textFieldStyles: TextFieldStyles? = null,
         val backButton: BarButton? = null,
         val searchPlaceholder: StringDesc? = null,
         val searchQuery: MutableLiveData<String>,
+        val iosSearchBarStyle: IOSSearchBarStyle = IOSSearchBarStyle.DEFAULT,
         val androidSearchBackground: Background<Fill.Solid>? = null,
         val iosHidesSearchBarWhenScrolling: Boolean = true
     ) : NavigationBar()
@@ -126,7 +131,21 @@ sealed class NavigationBar {
         val backgroundColor: Color? = null,
         val textStyle: TextStyle<Color>? = null,
         val tintColor: Color? = null,
-        val isShadowEnabled: Boolean? = null
+        val isShadowEnabled: Boolean? = null,
+        val isTransparent: Boolean = false
+    )
+
+    enum class IOSSearchBarStyle {
+        DEFAULT,
+        MINIMAL,
+        PROMINENT
+    }
+
+    data class TextFieldStyles(
+        val backgroundColor: Color? = null,
+        val textStyle: TextStyle<Color>? = null,
+        val tintColor: Color? = null,
+        val iconTintColor: Color? = null
     )
 
     data class BarButton(

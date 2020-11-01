@@ -9,19 +9,8 @@ import dev.icerock.moko.widgets.core.associatedObject
 import dev.icerock.moko.widgets.core.screen.navigation.NavigationBar
 import dev.icerock.moko.widgets.core.utils.toUIBarButtonItem
 import dev.icerock.moko.widgets.core.utils.toUIFont
-import platform.UIKit.NSFontAttributeName
-import platform.UIKit.NSForegroundColorAttributeName
-import platform.UIKit.UIApplication
-import platform.UIKit.UIBarButtonItem
-import platform.UIKit.UIBarMetricsDefault
-import platform.UIKit.UIImage
-import platform.UIKit.UINavigationBar
-import platform.UIKit.UINavigationController
-import platform.UIKit.UISearchController
-import platform.UIKit.UISearchResultsUpdatingProtocol
-import platform.UIKit.UIViewController
-import platform.UIKit.navigationItem
-import platform.UIKit.tintColor
+import platform.Foundation.valueForKey
+import platform.UIKit.*
 import platform.darwin.NSObject
 
 fun UINavigationBar.applyNavigationBarStyle(style: NavigationBar.Styles?) {
@@ -40,6 +29,7 @@ fun UINavigationBar.applyNavigationBarStyle(style: NavigationBar.Styles?) {
         ?: UIApplication.sharedApplication.keyWindow?.rootViewController()?.view?.tintColor!!
     val shadowImage = if (style?.isShadowEnabled == false) UIImage() else null
     val backgroundImage = if (style?.isShadowEnabled == false) UIImage() else null
+    val transparent = style?.isTransparent ?: false
 
 //    TODO uncomment when kotlin-native will fix linking to newest api
 //    if (UIDevice.currentDevice.systemVersion.compareTo("13.0") < 0) {
@@ -47,6 +37,7 @@ fun UINavigationBar.applyNavigationBarStyle(style: NavigationBar.Styles?) {
     this.titleTextAttributes = textAttributes
     this.tintColor = tintColor
     this.shadowImage = shadowImage
+    this.translucent = transparent
     this.setBackgroundImage(backgroundImage, forBarMetrics = UIBarMetricsDefault)
 //    } else {
 //        val appearance = UINavigationBarAppearance().apply {
@@ -75,6 +66,24 @@ fun NavigationBar.Normal.apply(
 ) {
     navigationController?.navigationBarHidden = false
     viewController.navigationItem.title = title.localized()
+
+    titleImage?.let {
+        val imageView = UIImageView(it.toUIImage())
+
+        imageView.contentMode = UIViewContentMode.UIViewContentModeScaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+
+        titleImageWidthAnchor?.toDouble()?.let { widthAnchor ->
+            imageView.widthAnchor.constraintEqualToConstant(widthAnchor).active = true
+        }
+
+        titleImageHeightAnchor?.toDouble()?.let { heightAnchor ->
+            imageView.heightAnchor.constraintEqualToConstant(heightAnchor).active = true
+        }
+
+        viewController.navigationItem.titleView = imageView
+    }
+
     navigationController?.navigationBar?.applyNavigationBarStyle(styles)
 
     backButton?.also {
@@ -105,7 +114,36 @@ fun NavigationBar.Search.apply(
         }
         obscuresBackgroundDuringPresentation = false
         searchBar.placeholder = searchPlaceholder?.localized()
+
         styles?.tintColor?.also { searchBar.tintColor = it.toUIColor() }
+
+        searchBar.searchBarStyle = when (iosSearchBarStyle) {
+            NavigationBar.IOSSearchBarStyle.DEFAULT -> UISearchBarStyle.UISearchBarStyleDefault
+            NavigationBar.IOSSearchBarStyle.PROMINENT -> UISearchBarStyle.UISearchBarStyleProminent
+            NavigationBar.IOSSearchBarStyle.MINIMAL -> UISearchBarStyle.UISearchBarStyleMinimal
+        }
+
+        textFieldStyles?.also { style ->
+            val textField = searchBar.valueForKey("searchField") as? UITextField
+
+            style.textStyle?.also { ts ->
+                ts.color?.also { textField?.textColor = it.toUIColor() }
+                ts.fontStyle?.also { textField?.font = ts.toUIFont() }
+            }
+
+            viewController.navigationItem.hidesSearchBarWhenScrolling =
+                iosHidesSearchBarWhenScrolling
+
+            style.iconTintColor?.also {
+                textField?.leftView?.tintColor = it.toUIColor()
+            }
+
+            style.backgroundColor?.also {
+                textField?.backgroundColor = it.toUIColor()
+            }
+        }
+
+        setAutomaticallyShowsSearchResultsController(true)
     }
 
     viewController.navigationItem.hidesSearchBarWhenScrolling = iosHidesSearchBarWhenScrolling

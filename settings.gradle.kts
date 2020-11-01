@@ -5,12 +5,3 @@
 includeBuild("plugin")
 
 include(":widgets")
-include(":widgets-sms")
-include(":widgets-bottomsheet")
-include(":widgets-collection")
-include(":widgets-datetime-picker")
-include(":widgets-image-network")
-include(":widgets-permissions")
-include(":widgets-media")
-include(":sample:android-app")
-include(":sample:mpp-library")

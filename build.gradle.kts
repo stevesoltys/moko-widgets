@@ -33,6 +33,7 @@ allprojects {
 
         maven { url = uri("https://dl.bintray.com/icerockdev/moko-dev") }
         maven { url = uri("https://dl.bintray.com/icerockdev/plugins-dev") }
+        maven { url = uri("https://dl.bintray.com/icerockdev/maven") }
     }
 
     configurations
@@ -72,7 +73,7 @@ allprojects {
     val bintrayPath: Pair<String, String>?
     when {
         this.name.startsWith("widgets") -> {
-            bintrayPath = "moko" to "moko-widgets"
+            bintrayPath = "maven" to "moko-widgets"
 
             this.group = "dev.icerock.moko"
             this.version = Deps.mokoWidgetsVersion
@@ -87,10 +88,8 @@ allprojects {
             project.configure<PublishingExtension> {
                 val repo = bintrayPath.first
                 val artifact = bintrayPath.second
-                val isDevPublish = project.properties.containsKey("devPublish")
-                val fullRepoName = if (isDevPublish) "$repo-dev" else repo
                 val mavenUrl =
-                    "https://api.bintray.com/maven/icerockdev/$fullRepoName/$artifact/;publish=1"
+                    "https://api.bintray.com/maven/stevesoltys/$repo/$artifact/;publish=1"
 
                 repositories.maven(mavenUrl) {
                     this.name = "bintray"

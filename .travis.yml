@@ -1,0 +1,33 @@
+language: java
+
+cache:
+  directories:
+    - $HOME/.m2
+    - gradle
+    - buildSrc/build
+    - widgets/build
+
+addons:
+  homebrew:
+    taps: adoptopenjdk/openjdk
+    casks:
+      - adoptopenjdk8
+      - adoptopenjdk11
+      - android-sdk
+
+matrix:
+  fast_finish: true
+  include:
+  - os: osx
+    osx_image: xcode11.5
+    before_script:
+      - export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+      - export ANDROID_SDK_ROOT=/usr/local/share/android-sdk
+      - export ANDROID_HOME=/usr/local/share/android-sdk
+      - yes | /usr/local/share/android-sdk/tools/bin/sdkmanager --update &>/dev/null
+      - yes | /usr/local/share/android-sdk/tools/bin/sdkmanager "platform-tools" "platforms;android-28" &>/dev/null
+      - export JAVA_HOME=$(/usr/libexec/java_home -v 11)
+      - ./gradlew -p plugin -PdevPublish  -DBINTRAY_USER=$BINTRAY_USER -DBINTRAY_KEY=$BINTRAY_KEY -DANDROID_SDK_ROOT=/usr/local/share/android-sdk -DANDROID_HOME=/usr/local/share/android-sdk publishNoValidationToBintray --stacktrace
+
+install: true
+script: ./gradlew --stacktrace -PdevPublish -DBINTRAY_USER=$BINTRAY_USER -DBINTRAY_KEY=$BINTRAY_KEY -DANDROID_SDK_ROOT=/usr/local/share/android-sdk -DANDROID_HOME=/usr/local/share/android-sdk publishNoValidationToBintray --stacktrace
