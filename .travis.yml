@@ -27,7 +27,8 @@ matrix:
       - yes | /usr/local/share/android-sdk/tools/bin/sdkmanager --update &>/dev/null
       - yes | /usr/local/share/android-sdk/tools/bin/sdkmanager "platform-tools" "platforms;android-28" &>/dev/null
       - export JAVA_HOME=$(/usr/libexec/java_home -v 11)
-      - ./gradlew -p plugin -PdevPublish  -DBINTRAY_USER=$BINTRAY_USER -DBINTRAY_KEY=$BINTRAY_KEY -DANDROID_SDK_ROOT=/usr/local/share/android-sdk -DANDROID_HOME=/usr/local/share/android-sdk publishNoValidationToBintray --stacktrace
 
 install: true
-script: ./gradlew --stacktrace -PdevPublish -DBINTRAY_USER=$BINTRAY_USER -DBINTRAY_KEY=$BINTRAY_KEY -DANDROID_SDK_ROOT=/usr/local/share/android-sdk -DANDROID_HOME=/usr/local/share/android-sdk publishNoValidationToBintray --stacktrace
+script:
+  - ./gradlew -p plugin -PdevPublish  -DBINTRAY_USER=$BINTRAY_USER -DBINTRAY_KEY=$BINTRAY_KEY -DANDROID_SDK_ROOT=/usr/local/share/android-sdk -DANDROID_HOME=/usr/local/share/android-sdk publishNoValidationToBintray --stacktrace
+  - ./gradlew -PdevPublish -DBINTRAY_USER=$BINTRAY_USER -DBINTRAY_KEY=$BINTRAY_KEY -DANDROID_SDK_ROOT=/usr/local/share/android-sdk -DANDROID_HOME=/usr/local/share/android-sdk publishNoValidationToBintray --stacktrace
