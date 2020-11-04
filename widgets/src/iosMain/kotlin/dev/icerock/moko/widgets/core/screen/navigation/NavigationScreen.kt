@@ -20,6 +20,11 @@ import platform.UIKit.UIViewController
 import platform.darwin.NSObject
 import kotlin.native.ref.WeakReference
 
+actual data class NavigationBarData(
+    val navigationController: UINavigationController?,
+    val viewController: UIViewController
+)
+
 actual abstract class NavigationScreen<S> actual constructor(
     private val initialScreen: TypedScreenDesc<Args.Empty, S>,
     router: Router
@@ -52,6 +57,11 @@ actual abstract class NavigationScreen<S> actual constructor(
             is NavigationBar.None -> navBar.apply(navigationController)
             is NavigationBar.Normal -> navBar.apply(navigationController, viewController)
             is NavigationBar.Search -> navBar.apply(navigationController, viewController)
+
+            else -> navigationItem.navigationBar.factory?.apply(
+                navigationBar = navigationItem.navigationBar,
+                navigationBarData = NavigationBarData(navigationController, viewController)
+            )
         }
     }
 
@@ -177,7 +187,8 @@ private class NavigationController(
 
     override fun preferredStatusBarStyle(): UIStatusBarStyle {
         val topScreen = topViewController?.getAssociatedScreen()
-        val isLight = topScreen?.isLightStatusBar ?: isLightStatusBar ?: BaseApplication.sharedInstance.isLightStatusBar
+        val isLight = topScreen?.isLightStatusBar ?: isLightStatusBar
+        ?: BaseApplication.sharedInstance.isLightStatusBar
         return getStatusBarStyle(isLight) ?: super.preferredStatusBarStyle()
     }
 }

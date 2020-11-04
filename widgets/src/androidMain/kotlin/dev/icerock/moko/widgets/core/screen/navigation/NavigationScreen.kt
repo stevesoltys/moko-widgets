@@ -26,7 +26,6 @@ import dev.icerock.moko.widgets.core.style.apply
 import dev.icerock.moko.widgets.core.utils.ThemeAttrs
 import dev.icerock.moko.widgets.core.utils.dp
 
-
 actual abstract class NavigationScreen<S> actual constructor(
     private val initialScreen: TypedScreenDesc<Args.Empty, S>,
     private val router: Router
@@ -206,6 +205,16 @@ actual abstract class NavigationScreen<S> actual constructor(
                     fragmentManager = childFragmentManager
                 )
             }
+            else -> {
+                fragment.navigationBar.factory?.apply(
+                    navigationBar = fragment.navigationBar,
+                    navigationBarData = NavigationBarData(
+                        toolbar = toolbar,
+                        context = context,
+                        fragmentManager = childFragmentManager
+                    )
+                )
+            }
         }
     }
 
@@ -308,3 +317,9 @@ actual abstract class NavigationScreen<S> actual constructor(
         const val CURRENT_SCREEN_ID_KEY = "navigation:screen:current_id"
     }
 }
+
+actual data class NavigationBarData(
+    val toolbar: Toolbar,
+    val context: Context,
+    val fragmentManager: FragmentManager
+)

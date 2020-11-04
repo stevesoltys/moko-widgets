@@ -96,13 +96,20 @@ fun <IT, P : Parcelable, OT, R : Parcelable, S> NavigationScreen.Router.createPu
         outputMapper
     )
 
-// NavigationItem
-
 interface NavigationItem {
     val navigationBar: NavigationBar
 }
 
-sealed class NavigationBar {
+expect class NavigationBarData
+
+interface NavigationBarFactory {
+    fun apply(navigationBar: NavigationBar, navigationBarData: NavigationBarData)
+}
+
+open class NavigationBar(
+    val factory: NavigationBarFactory? = null
+) {
+
     object None : NavigationBar()
 
     data class Normal(
